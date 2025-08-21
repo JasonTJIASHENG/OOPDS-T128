@@ -65,7 +65,7 @@ public:
     
     //Display Account Information
     void displayAmount() const {
-        cout << left << setw(15) << accountNumber << setw(20) << customerName << fixed << setprecision(2) << "$" << accountBalance << endl;
+        cout << left << setw(20) << accountNumber << setw(20) << customerName << fixed << setprecision(2) << "$" << accountBalance << endl;
     }
 };
 
@@ -125,7 +125,7 @@ public:
         return true;
     }
     
-    void displayAllAccounts(const string& accNum, const string& cusName, double accBal) const {
+    void displayAllAccounts() const {
         if(head == nullptr) {
             cout << "No accounrs found in the system." << endl;
             return;
@@ -133,7 +133,13 @@ public:
         cout << "\n" << string(60, '=') << endl;
         cout << left << setw(20) << "Account Number" << setw(20) << "Customer Name" << "Account Balance" << endl;
         cout << string(60, '-') << endl;
-        cout << left << setw(20) << accNum << setw(20) << cusName << accBal << endl;
+        
+        BankAccountNode* current = head;
+        while(current != nullptr) {
+            current->account.displayAmount();
+            current = current->next;
+        }
+        cout << string(60, '=') << endl;
     }
     
     BankAccountNode* searchAccount(const string& accNum) const {
@@ -284,7 +290,7 @@ int main() {
             }
             
             case 2: { // Display All Accounts
-                bank.displayAllAccounts(const string& accNum, const string& cusName, double accBal);
+                bank.displayAllAccounts();
                 break;
             }
             
