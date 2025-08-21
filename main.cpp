@@ -35,11 +35,11 @@ public:
         return accountNumber;
     }
     
-    int getCustomerName() {
+    string getCustomerName() {
         return customerName;
     }
     
-    int getAccountBalance() {
+    double getAccountBalance() {
         return accountBalance;
     }
     
@@ -65,7 +65,7 @@ public:
     
     //Display Account Information
     void displayAmount() {
-        cout << left << setw(15) << accountNumber << setw() << customerName << fixed << setprecision(20) << "$" << accountBalance << endl;
+        cout << left << setw(15) << accountNumber << setw(20) << customerName << fixed << setprecision(2) << "$" << accountBalance << endl;
     }
 };
 
@@ -97,7 +97,8 @@ int getValidChoice() {
 
 int main() {
     int choice;
-    string accNum, name;
+    int accNum;
+    string cusName;
     double amount;
     
     cout << "Welcome to the Bank Account Management System!" << endl;
@@ -113,12 +114,12 @@ int main() {
                 cout << "Enter Account Number: ";
                 getline(cin, accNum);
                 cout << "Enter Customer Name: ";
-                getline(cin, name);
+                getline(cin, cusName);
                 cout << "Enter Initial Balance: $";
                 cin >> amount;
                 cin.ignore();
                 
-                bank.addAccount(accNum, name, amount);
+                bank.addAccount(accNum, cusName, amount);
                 break;
             }
             
