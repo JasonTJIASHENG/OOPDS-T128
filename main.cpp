@@ -5,20 +5,20 @@ using namespace std;
 
 class BankAccount {
 private:
-    int accountNumber;
+    string accountNumber;
     string customerName;
     double accountBalance;
     
 public:
     //Constructor with default parameters
-    BankAccount(int accNum = 0, string cusName = "", double accBal = 0.0) {
+    BankAccount(string accNum = "", string cusName = "", double accBal = 0.0) {
         accountNumber = accNum;
         customerName = cusName;
         accountBalance = accBal;
     }
     
     //Setter Methods
-    void setAccountNumber(int accNum) {
+    void setAccountNumber(string accNum) {
         accountNumber = accNum;
     }
     
@@ -31,15 +31,15 @@ public:
     }
     
     //Getter Methods
-    int getAccountNumber() {
+    string getAccountNumber() const {
         return accountNumber;
     }
     
-    string getCustomerName() {
+    string getCustomerName() const {
         return customerName;
     }
     
-    double getAccountBalance() {
+    double getAccountBalance() const {
         return accountBalance;
     }
     
@@ -64,8 +64,167 @@ public:
     }
     
     //Display Account Information
-    void displayAmount() {
+    void displayAmount() const {
         cout << left << setw(15) << accountNumber << setw(20) << customerName << fixed << setprecision(2) << "$" << accountBalance << endl;
+    }
+};
+
+class BankAccountNode {
+public:
+    BankAccount account;
+    BankAccountNode* next;
+    
+    BankAccountNode(const BankAccount& acc) {
+        account = acc;
+        next = nullptr;
+    }
+    
+    ~BankAccountNode() {
+        cout << "Account node for " << account.getAccountNumber() << " destroyed." << endl;
+    }
+};
+
+class BankManagementSystem {
+private:
+    BankAccountNode* head;
+    
+public:
+    BankManagementSystem() {
+        head = nullptr;
+        cout << "Bank Management System initialized." << endl;
+    }
+    
+    ~BankManagementSystem() {
+        cout << "\nCleaning up memory......" << endl;
+        while(head != nullptr) {
+            BankAccountNode* temp = head;
+            head = head->next;
+            delete temp;
+        }
+        cout << "Bank Management System destroyed." << endl;
+    }
+    
+    bool addAccount(const string& accNum, const string& cusName, double initialBalance) {
+        if(searchAccount(accNum) != nullptr) {
+            cout << "Error: Account number " << accNum << " already exists!" << endl;
+            return false;
+        }
+        
+        if(initialBalance < 0) {
+            cout << "Error: Initial balance cannot be negative!" << endl;
+            return false;
+        }
+        
+        BankAccount newAccount(accNum, cusName, initialBalance);
+        BankAccountNode* newNode = new BankAccountNode(newAccount);
+        
+        newNode->next = head;
+        head = newNode;
+        
+        cout << "Account " << accNum << " added successfully!" << endl;
+        return true;
+    }
+    
+    void displayAllAccounts(const string& accNum, const string& cusName, double accBal) const {
+        if(head == nullptr) {
+            cout << "No accounrs found in the system." << endl;
+            return;
+        }
+        cout << "\n" << string(60, '=') << endl;
+        cout << left << setw(20) << "Account Number" << setw(20) << "Customer Name" << "Account Balance" << endl;
+        cout << string(60, '-') << endl;
+        cout << left << setw(20) << accNum << setw(20) << cusName << accBal << endl;
+    }
+    
+    BankAccountNode* searchAccount(const string& accNum) const {
+        BankAccountNode* current = head;
+        while(current != nullptr) {
+            if(current->account.getAccountNumber() == accNum) {
+                return current;
+            }
+            current = current->next;
+        }
+        return nullptr;
+    }
+    
+    bool deposit(const string& accNum, double amount) {
+        BankAccountNode* accountNode = searchAccount(accNum);
+        if(accountNode == nullptr) {
+            cout << "Error: Account " << accNum << " not found!" << endl;
+            return false;
+        }
+        
+        if(accountNode->account.deposit(amount)) {
+            cout << "Successfully deposited $" << fixed << setprecision(2) << amount << " to account " << accNum << endl;
+            cout << "New balance: $" << accountNode->account.getAccountBalance() << endl;
+            return true;
+        } else {
+            cout << "Error: Invalid deposit amount!" << endl;
+            return false;
+        }
+    }
+    
+    bool withdraw(const string& accNum, double amount) {
+        BankAccountNode* accountNode = searchAccount(accNum);
+        if(accountNode == nullptr) {
+            cout << "Error: Account " << accNum << " not found!" << endl;
+            return false;
+        }
+        
+        if(accountNode->account.withdraw(amount)) {
+            cout << "Successfully withdrew $" << fixed << setprecision(2) << amount << " from account " << accNum << endl;
+            cout << "New balance: $" << accountNode->account.getAccountBalance() << endl;
+            return true;
+        } else {
+            cout << "Error: Insufficient balance or invalid amount!" << endl;
+            return false;
+        }
+    }
+    
+    bool deleteAccount(const string& accNum) {
+        if(head == nullptr) {
+            cout << "Error: No accounts in the system!" << endl;
+            return false;
+        }
+        
+        if(head->account.getAccountNumber() == accNum) {
+            BankAccountNode* temp = head;
+            head = head->next;
+            cout << "Account " << accNum << " deleted successfully" << endl;
+            delete temp;
+            return true;
+        }
+        
+        BankAccountNode* current = head;
+        while(current->next != nullptr && current->next->account.getAccountNumber() != accNum) {
+            current = current->next;
+        }
+        
+        if(current->next == nullptr) {
+            cout << "Error: Account " << accNum << " not found!" << endl;
+            return false;
+        }
+        
+        BankAccountNode* temp = current->next;
+        current->next = temp->next;
+        cout << "Account " << accNum << " deleted successfully!" << endl;
+        delete temp;  // Calls destructor
+        return true;
+    }
+    
+    void displayAccountDetails(const string& accNum) const {
+        BankAccountNode* accountNode = searchAccount(accNum);
+        if(accountNode != nullptr) {
+            cout << "\nAccount Details:" << endl;
+            cout << string(40, '-') << endl;
+            cout << "Account Number: " << accountNode->account.getAccountNumber() << endl;
+            cout << "Customer Name: " << accountNode->account.getCustomerName() << endl;
+            cout << "Account Balance: $" << fixed << setprecision(2)
+                 << accountNode->account.getAccountBalance() << endl;
+            cout << string(40, '-') << endl;
+        } else {
+            cout << "Account " << accNum << " not found!" << endl;
+        }
     }
 };
 
@@ -96,8 +255,9 @@ int getValidChoice() {
 }
 
 int main() {
+    BankManagementSystem bank;
     int choice;
-    int accNum;
+    string accNum;
     string cusName;
     double amount;
     
@@ -124,7 +284,7 @@ int main() {
             }
             
             case 2: { // Display All Accounts
-                bank.displayAllAccounts();
+                bank.displayAllAccounts(const string& accNum, const string& cusName, double accBal);
                 break;
             }
             
