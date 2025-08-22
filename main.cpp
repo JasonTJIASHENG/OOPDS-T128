@@ -104,7 +104,7 @@ public:
         cout << "Bank Management System destroyed." << endl;
     }
     
-    bool addAccount(const string& accNum, const string& cusName, double initialBalance) {
+    bool createAccount(const string& accNum, const string& cusName, double initialBalance) {
         if(searchAccount(accNum) != nullptr) {
             cout << "Error: Account number " << accNum << " already exists!" << endl;
             return false;
@@ -121,7 +121,7 @@ public:
         newNode->next = head;
         head = newNode;
         
-        cout << "Account " << accNum << " added successfully!" << endl;
+        cout << "Account " << accNum << " created successfully!" << endl;
         return true;
     }
     
@@ -218,6 +218,88 @@ public:
         return true;
     }
     
+    void sendFeedback() const {
+        cout << "\n" << string(50, '=') << endl;
+        cout << "CUSTOMER FEEDBACK & ISSUE REPORTING SYSTEM" << endl;
+        cout << string(50, '=') << endl;
+        
+        string accNum, name, feedbackType, message;
+        
+        // Get customer information
+        cout << "Enter your Account Number (or press Enter to skip): ";
+        getline(cin, accNum);
+        
+        if (!accNum.empty()) {
+            // Verify if account exists
+            BankAccountNode* accountNode = searchAccount(accNum);
+            if (accountNode != nullptr) {
+                name = accountNode->account.getCustomerName();
+                cout << "Welcome, " << name << "!" << endl;
+            } else {
+                cout << "Account not found, but you can still submit feedback as a guest." << endl;
+                cout << "Enter your Name: ";
+                getline(cin, name);
+            }
+        } else {
+            cout << "Enter your Name: ";
+            getline(cin, name);
+        }
+        
+        // Select feedback type
+        cout << "\nSelect Feedback Type:" << endl;
+        cout << "1. General Feedback" << endl;
+        cout << "2. Service Complaint" << endl;
+        cout << "3. Technical Issue" << endl;
+        cout << "4. Feature Request" << endl;
+        cout << "5. Account Issue" << endl;
+        cout << "Enter your choice (1-5): ";
+        
+        int choice;
+        while (!(cin >> choice) || choice < 1 || choice > 5) {
+            cout << "Invalid input! Please enter a number between 1-5: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+        cin.ignore(); // Clear newline
+        
+        // Map choice to feedback type
+        switch (choice) {
+            case 1: feedbackType = "General Feedback"; break;
+            case 2: feedbackType = "Service Complaint"; break;
+            case 3: feedbackType = "Technical Issue"; break;
+            case 4: feedbackType = "Feature Request"; break;
+            case 5: feedbackType = "Account Issue"; break;
+        }
+        
+        // Get feedback message
+        cout << "\nEnter your " << feedbackType << " (max 500 characters):" << endl;
+        cout << "Message: ";
+        getline(cin, message);
+        
+        if (message.empty()) {
+            cout << "Error: Feedback message cannot be empty!" << endl;
+            return;
+        }
+        
+        // Display feedback summary
+        cout << "\n" << string(50, '=') << endl;
+        cout << "FEEDBACK SUBMITTED SUCCESSFULLY!" << endl;
+        cout << string(50, '=') << endl;
+        cout << "Feedback ID: FB" << rand() % 10000 + 1000 << endl;
+        cout << "Date & Time: " << __DATE__ << " " << __TIME__ << endl;
+        cout << "Customer: " << (name.empty() ? "Anonymous" : name) << endl;
+        if (!accNum.empty()) {
+            cout << "Account Number: " << accNum << endl;
+        }
+        cout << "Type: " << feedbackType << endl;
+        cout << "Message: " << message << endl;
+        cout << string(50, '=') << endl;
+        cout << "\nThank you for your feedback!" << endl;
+        cout << "Our customer service team will review your " << feedbackType << endl;
+        cout << "and respond within 24-48 hours if a response is required." << endl;
+        cout << "\nFor urgent issues, please call our hotline: 1-800-BANK-HELP" << endl;
+    }
+    
     void displayAccountDetails(const string& accNum) const {
         BankAccountNode* accountNode = searchAccount(accNum);
         if(accountNode != nullptr) {
@@ -238,21 +320,22 @@ void displayMenu() {
     cout << "\n" << string(50, '=') << endl;
     cout << "BANK MANAGEMENT SYSTEM" << endl;
     cout << string(50, '=') << endl;
-    cout << "1. Add New Account" << endl;
+    cout << "1. Create New Account" << endl;
     cout << "2. Display All Accounts" << endl;
     cout << "3. Search Account By Account Number" << endl;
     cout << "4. Deposit Money" << endl;
     cout << "5. Withdraw Money" << endl;
-    cout << "6. Delete An Account" << endl;
-    cout << "7. Exit System" << endl;
-    cout << "Enter your choice (1-7): ";
+    cout << "6. Delete Account" << endl;
+    cout << "7. Send Feedback/Report Issue" << endl;
+    cout << "8. Exit System" << endl;
+    cout << "Enter your choice (1-8): ";
 }
 
 //Input validation
 int getValidChoice() {
     int choice;
-    while (!(cin >> choice) || choice < 1 || choice > 7) {
-        cout << "Invalid input! Please enter a number between 1-7: ";
+    while (!(cin >> choice) || choice < 1 || choice > 8) {
+        cout << "Invalid input! Please enter a number between 1-8: ";
         cin.clear();
         cin.ignore(1000, '\n');
     }
@@ -274,8 +357,8 @@ int main() {
         choice = getValidChoice();
         
         switch (choice) {
-            case 1: { // Add New Account
-                cout << "\nADD NEW ACCOUNT" << endl;
+            case 1: { // Create New Account
+                cout << "\nCREATE NEW ACCOUNT" << endl;
                 cout << string(30, '-') << endl;
                 cout << "Enter Account Number: ";
                 getline(cin, accNum);
@@ -285,7 +368,7 @@ int main() {
                 cin >> amount;
                 cin.ignore();
                 
-                bank.addAccount(accNum, cusName, amount);
+                bank.createAccount(accNum, cusName, amount);
                 break;
             }
             
@@ -349,19 +432,25 @@ int main() {
                 break;
             }
             
-            case 7: { // Exit System
+            case 7: {
+                bank.sendFeedback();
+                break;
+            }
+            
+            case 8: { // Exit System
                 cout << "\nThank you for using Bank Account Management System!" << endl;
+                cout << "See You Next Time!" << endl;
                 cout << "Goodbye!" << endl;
                 break;
             }
         }
         
-        if (choice != 7) {
+        if (choice != 8) {
             cout << "\nPress Enter to continue...";
             cin.get();
         }
         
-    } while (choice != 7);
+    } while (choice != 8);
     
     return 0;
 }
