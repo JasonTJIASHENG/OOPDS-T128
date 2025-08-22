@@ -1,8 +1,15 @@
+/* Assignment Question 1
+   Jason Tan Jia Sheng | 242UC244KW | jason.tan.jia@student.mmu.edu.my
+   Nelson Ng Yaohan | 242UC2444H | nelson.ng.yaohan@student.mmu.edu.my
+   Tan Park Zhong | 242UC244TW | tan.park.zhong@student.mmu.edu.my
+*/
+
 #include <iostream>
 #include <string>
 #include <iomanip>
 using namespace std;
 
+// Bank Account class representing individual account data
 class BankAccount {
 private:
     string accountNumber;
@@ -10,7 +17,7 @@ private:
     double accountBalance;
     
 public:
-    //Constructor with default parameters
+    //Constructor with default parameters(settle everything in 1 constructor)
     BankAccount(string accNum = "", string cusName = "", double accBal = 0.0) {
         accountNumber = accNum;
         customerName = cusName;
@@ -30,7 +37,7 @@ public:
         accountBalance = accBal;
     }
     
-    //Getter Methods
+    //Getter Methods (Encapsulation)
     string getAccountNumber() const {
         return accountNumber;
     }
@@ -69,55 +76,66 @@ public:
     }
 };
 
+// Node class for singly linked list
 class BankAccountNode {
 public:
-    BankAccount account;
-    BankAccountNode* next;
+    BankAccount account; //Account Data
+    BankAccountNode* next; //Pointer to the next node
     
+    //Constructor
     BankAccountNode(const BankAccount& acc) {
         account = acc;
         next = nullptr;
     }
     
+    //Destructor
     ~BankAccountNode() {
         cout << "Account node for " << account.getAccountNumber() << " destroyed." << endl;
     }
 };
 
+// Bank Management System class using singly linked list
 class BankManagementSystem {
 private:
-    BankAccountNode* head;
+    BankAccountNode* head; //Head pointer to the next linked list
     
 public:
+    // This constructor is to initialize the empty list
     BankManagementSystem() {
         head = nullptr;
         cout << "Bank Management System initialized." << endl;
     }
     
+    // This destructor is to clean up all the nodes
     ~BankManagementSystem() {
         cout << "\nCleaning up memory......" << endl;
         while(head != nullptr) {
             BankAccountNode* temp = head;
             head = head->next;
-            delete temp;
+            delete temp; // Calls node destructor
         }
         cout << "Bank Management System destroyed." << endl;
     }
     
+    // Method 1: Add a new account (prevent duplicates)
     bool createAccount(const string& accNum, const string& cusName, double initialBalance) {
+        // Check for duplicate account number
         if(searchAccount(accNum) != nullptr) {
             cout << "Error: Account number " << accNum << " already exists!" << endl;
             return false;
         }
         
+        // Validate initial balance
         if(initialBalance < 0) {
             cout << "Error: Initial balance cannot be negative!" << endl;
             return false;
         }
         
+        // Create new account and node
         BankAccount newAccount(accNum, cusName, initialBalance);
         BankAccountNode* newNode = new BankAccountNode(newAccount);
         
+        // Insert at the beginning of the list
         newNode->next = head;
         head = newNode;
         
@@ -125,6 +143,7 @@ public:
         return true;
     }
     
+    // Method 2: Display all accounts
     void displayAllAccounts() const {
         if(head == nullptr) {
             cout << "No accounrs found in the system." << endl;
@@ -142,6 +161,7 @@ public:
         cout << string(60, '=') << endl;
     }
     
+    // Method 3: Search by account number
     BankAccountNode* searchAccount(const string& accNum) const {
         BankAccountNode* current = head;
         while(current != nullptr) {
@@ -150,9 +170,10 @@ public:
             }
             current = current->next;
         }
-        return nullptr;
+        return nullptr; // Account not found
     }
     
+    // Method 4: Deposit money
     bool deposit(const string& accNum, double amount) {
         BankAccountNode* accountNode = searchAccount(accNum);
         if(accountNode == nullptr) {
@@ -170,6 +191,7 @@ public:
         }
     }
     
+    // Method 5: Withdraw money
     bool withdraw(const string& accNum, double amount) {
         BankAccountNode* accountNode = searchAccount(accNum);
         if(accountNode == nullptr) {
@@ -187,12 +209,14 @@ public:
         }
     }
     
+    // Method 6: Delete an account
     bool deleteAccount(const string& accNum) {
         if(head == nullptr) {
             cout << "Error: No accounts in the system!" << endl;
             return false;
         }
         
+        // If the account to delete is the first node
         if(head->account.getAccountNumber() == accNum) {
             BankAccountNode* temp = head;
             head = head->next;
@@ -201,6 +225,7 @@ public:
             return true;
         }
         
+        // Search for the account to delete
         BankAccountNode* current = head;
         while(current->next != nullptr && current->next->account.getAccountNumber() != accNum) {
             current = current->next;
@@ -211,6 +236,7 @@ public:
             return false;
         }
         
+        // Delete the node
         BankAccountNode* temp = current->next;
         current->next = temp->next;
         cout << "Account " << accNum << " deleted successfully!" << endl;
@@ -218,6 +244,7 @@ public:
         return true;
     }
     
+    // Method 7: Send Feedback or Report Issue
     void sendFeedback() const {
         cout << "\n" << string(50, '=') << endl;
         cout << "CUSTOMER FEEDBACK & ISSUE REPORTING SYSTEM" << endl;
@@ -300,6 +327,7 @@ public:
         cout << "\nFor urgent issues, please call our hotline: 1-800-BANK-HELP" << endl;
     }
     
+    // Display account details by account number
     void displayAccountDetails(const string& accNum) const {
         BankAccountNode* accountNode = searchAccount(accNum);
         if(accountNode != nullptr) {
@@ -316,6 +344,7 @@ public:
     }
 };
 
+// Menu-driven interface functions
 void displayMenu() {
     cout << "\n" << string(50, '=') << endl;
     cout << "BANK MANAGEMENT SYSTEM" << endl;
@@ -343,8 +372,9 @@ int getValidChoice() {
     return choice;
 }
 
+// Main function demonstrating the system
 int main() {
-    BankManagementSystem bank;
+    BankManagementSystem bank; //Create bank management system
     int choice;
     string accNum;
     string cusName;
@@ -432,7 +462,7 @@ int main() {
                 break;
             }
             
-            case 7: {
+            case 7: { //Send Feedback/Report Issue
                 bank.sendFeedback();
                 break;
             }
@@ -452,5 +482,5 @@ int main() {
         
     } while (choice != 8);
     
-    return 0;
+    return 0; // Destructor will be automatically called here
 }
