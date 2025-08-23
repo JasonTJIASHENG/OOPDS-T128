@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* Assignment Question 1
    Jason Tan Jia Sheng | 242UC244KW | jason.tan.jia@student.mmu.edu.my
    Nelson Ng Yaohan | 242UC2444H | nelson.ng.yaohan@student.mmu.edu.my
