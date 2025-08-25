@@ -212,7 +212,10 @@ int main()
 
     do
     {
-        cout << "\n1. Add Incoming Item\n";
+        cout << "\n" << string(50, '=') << endl;
+        cout << "     WAREHOUSE INVENTORY & SHIPPING SYSTEM" << endl;
+        cout << string(50, '=') << endl;
+        cout << "1. Add Incoming Item\n";
         cout << "2. Process Incoming Item\n";
         cout << "3. Ship Item\n";
         cout << "4. View Last Incoming Item\n";
