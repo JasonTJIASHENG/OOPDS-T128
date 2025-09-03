@@ -401,12 +401,12 @@ int main() {
                 bank.createAccount(accNum, cusName, amount);
                 break;
             }
-            
+                
             case 2: { // Display All Accounts
                 bank.displayAllAccounts();
                 break;
             }
-            
+                
             case 3: { // Search Account
                 cout << "\nSEARCH ACCOUNT" << endl;
                 cout << string(30, '-') << endl;
@@ -416,7 +416,7 @@ int main() {
                 bank.displayAccountDetails(accNum);
                 break;
             }
-            
+                
             case 4: { // Deposit Money
                 cout << "\nDEPOSIT MONEY" << endl;
                 cout << string(30, '-') << endl;
@@ -429,7 +429,7 @@ int main() {
                 bank.deposit(accNum, amount);
                 break;
             }
-            
+                
             case 5: { // Withdraw Money
                 cout << "\nWITHDRAW MONEY" << endl;
                 cout << string(30, '-') << endl;
@@ -442,7 +442,7 @@ int main() {
                 bank.withdraw(accNum, amount);
                 break;
             }
-            
+                
             case 6: { // Delete Account
                 cout << "\nDELETE ACCOUNT" << endl;
                 cout << string(30, '-') << endl;
@@ -461,12 +461,12 @@ int main() {
                 }
                 break;
             }
-            
+                
             case 7: { //Send Feedback/Report Issue
                 bank.sendFeedback();
                 break;
             }
-            
+                
             case 8: { // Exit System
                 cout << "\nThank you for using Bank Account Management System!" << endl;
                 cout << "See You Next Time!" << endl;
@@ -483,3 +483,4 @@ int main() {
     } while (choice != 8);
     
     return 0; // Destructor will be automatically called here
+}
