@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <ctime>
 using namespace std;
 
 // Bank Account class representing individual account data
@@ -308,12 +309,16 @@ public:
             return;
         }
         
+        // Get the timestamp for the current date and time
+        time_t timestamp;
+        time(&timestamp);
+        
         // Display feedback summary
         cout << "\n" << string(50, '=') << endl;
         cout << "FEEDBACK SUBMITTED SUCCESSFULLY!" << endl;
         cout << string(50, '=') << endl;
         cout << "Feedback ID: FB" << rand() % 10000 + 1000 << endl;
-        cout << "Date & Time: " << __DATE__ << " " << __TIME__ << endl;
+        cout << "Date & Time: " << ctime(&timestamp);
         cout << "Customer: " << (name.empty() ? "Anonymous" : name) << endl;
         if (!accNum.empty()) {
             cout << "Account Number: " << accNum << endl;
