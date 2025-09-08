@@ -13,20 +13,20 @@ using namespace std;
 // Bank Account class representing individual account data
 class BankAccount {
 private:
-    string accountNumber;
+    long long accountNumber;
     string customerName;
     double accountBalance;
     
 public:
     //Constructor with default parameters(settle everything in 1 constructor)
-    BankAccount(string accNum = "", string cusName = "", double accBal = 0.0) {
+    BankAccount(long long accNum = 0, string cusName = "", double accBal = 0.0) {
         accountNumber = accNum;
         customerName = cusName;
         accountBalance = accBal;
     }
     
     //Setter Methods
-    void setAccountNumber(string accNum) {
+    void setAccountNumber(long long accNum) {
         accountNumber = accNum;
     }
     
@@ -39,7 +39,7 @@ public:
     }
     
     //Getter Methods (Encapsulation)
-    string getAccountNumber() const {
+    long long getAccountNumber() const {
         return accountNumber;
     }
     
@@ -100,6 +100,22 @@ class BankManagementSystem {
 private:
     BankAccountNode* head; //Head pointer to the next linked list
     
+    // Simple function to check if account number has exactly 10 digits
+        bool isValidAccountNumber(long long accNum) {
+            return (accNum >= 1000000000LL && accNum <= 9999999999LL);
+        }
+        
+        // Simple function to check if name contains only alphabets and spaces
+        bool isValidCustomerName(string name) {
+            for (int i = 0; i < name.length(); i++) {
+                char c = name[i];
+                if (!(c >= 'a' && c <= 'z') && !(c >= 'A' && c <= 'Z') && c != ' ') {
+                    return false;
+                }
+            }
+            return !name.empty();
+        }
+    
 public:
     // This constructor is to initialize the empty list
     BankManagementSystem() {
@@ -118,8 +134,22 @@ public:
         cout << "Bank Management System destroyed." << endl;
     }
     
+    
+    
     // Method 1: Add a new account (prevent duplicates)
-    bool createAccount(const string& accNum, const string& cusName, double initialBalance) {
+    bool createAccount(const long long& accNum, const string& cusName, double initialBalance) {
+        
+        if (!isValidAccountNumber(accNum)) {
+            cout << "Error: Account number must be exactly 10 digits (example: 1234567890)!" << endl;
+            return false;
+        }
+        
+        // Check if customer name contains only alphabets and spaces
+        if (!isValidCustomerName(cusName)) {
+            cout << "Error: Customer name must contain only alphabets and spaces!" << endl;
+            return false;
+        }
+        
         // Check for duplicate account number
         if(searchAccount(accNum) != nullptr) {
             cout << "Error: Account number " << accNum << " already exists!" << endl;
@@ -163,7 +193,7 @@ public:
     }
     
     // Method 3: Search by account number
-    BankAccountNode* searchAccount(const string& accNum) const {
+    BankAccountNode* searchAccount(const long long& accNum) const {
         BankAccountNode* current = head;
         while(current != nullptr) {
             if(current->account.getAccountNumber() == accNum) {
@@ -175,7 +205,7 @@ public:
     }
     
     // Method 4: Deposit money
-    bool deposit(const string& accNum, double amount) {
+    bool deposit(const long long& accNum, double amount) {
         BankAccountNode* accountNode = searchAccount(accNum);
         if(accountNode == nullptr) {
             cout << "Error: Account " << accNum << " not found!" << endl;
@@ -193,7 +223,7 @@ public:
     }
     
     // Method 5: Withdraw money
-    bool withdraw(const string& accNum, double amount) {
+    bool withdraw(const long long& accNum, double amount) {
         BankAccountNode* accountNode = searchAccount(accNum);
         if(accountNode == nullptr) {
             cout << "Error: Account " << accNum << " not found!" << endl;
@@ -211,7 +241,7 @@ public:
     }
     
     // Method 6: Delete an account
-    bool deleteAccount(const string& accNum) {
+    bool deleteAccount(const long long& accNum) {
         if(head == nullptr) {
             cout << "Error: No accounts in the system!" << endl;
             return false;
@@ -251,13 +281,14 @@ public:
         cout << "CUSTOMER FEEDBACK & ISSUE REPORTING SYSTEM" << endl;
         cout << string(50, '=') << endl;
         
-        string accNum, name, feedbackType, message;
+        long long accNum;
+        string name, feedbackType, message;
         
         // Get customer information
         cout << "Enter your Account Number (or press Enter to skip): ";
-        getline(cin, accNum);
+        cin >> accNum;
         
-        if (!accNum.empty()) {
+        if (accNum != 0) {
             // Verify if account exists
             BankAccountNode* accountNode = searchAccount(accNum);
             if (accountNode != nullptr) {
@@ -320,7 +351,7 @@ public:
         cout << "Feedback ID: FB" << rand() % 10000 + 1000 << endl;
         cout << "Date & Time: " << ctime(&timestamp);
         cout << "Customer: " << (name.empty() ? "Anonymous" : name) << endl;
-        if (!accNum.empty()) {
+        if (accNum != 0) {
             cout << "Account Number: " << accNum << endl;
         }
         cout << "Type: " << feedbackType << endl;
@@ -333,7 +364,7 @@ public:
     }
     
     // Display account details by account number
-    void displayAccountDetails(const string& accNum) const {
+    void displayAccountDetails(const long long& accNum) const {
         BankAccountNode* accountNode = searchAccount(accNum);
         if(accountNode != nullptr) {
             cout << "\nAccount Details:" << endl;
@@ -381,7 +412,7 @@ int getValidChoice() {
 int main() {
     BankManagementSystem bank; //Create bank management system
     int choice;
-    string accNum;
+    long long accNum;
     string cusName;
     double amount;
     
@@ -396,7 +427,8 @@ int main() {
                 cout << "\nCREATE NEW ACCOUNT" << endl;
                 cout << string(30, '-') << endl;
                 cout << "Enter Account Number: ";
-                getline(cin, accNum);
+                cin >> accNum;
+                cin.ignore();
                 cout << "Enter Customer Name: ";
                 getline(cin, cusName);
                 cout << "Enter Initial Balance: $";
@@ -416,7 +448,8 @@ int main() {
                 cout << "\nSEARCH ACCOUNT" << endl;
                 cout << string(30, '-') << endl;
                 cout << "Enter Account Number: ";
-                getline(cin, accNum);
+                cin >> accNum;
+                cin.ignore();
                 
                 bank.displayAccountDetails(accNum);
                 break;
@@ -426,7 +459,8 @@ int main() {
                 cout << "\nDEPOSIT MONEY" << endl;
                 cout << string(30, '-') << endl;
                 cout << "Enter Account Number: ";
-                getline(cin, accNum);
+                cin >> accNum;
+                cin.ignore();
                 cout << "Enter Deposit Amount: $";
                 cin >> amount;
                 cin.ignore();
@@ -439,7 +473,8 @@ int main() {
                 cout << "\nWITHDRAW MONEY" << endl;
                 cout << string(30, '-') << endl;
                 cout << "Enter Account Number: ";
-                getline(cin, accNum);
+                cin >> accNum;
+                cin.ignore();
                 cout << "Enter Withdrawal Amount: $";
                 cin >> amount;
                 cin.ignore();
@@ -452,7 +487,8 @@ int main() {
                 cout << "\nDELETE ACCOUNT" << endl;
                 cout << string(30, '-') << endl;
                 cout << "Enter Account Number to Delete: ";
-                getline(cin, accNum);
+                cin >> accNum;
+                cin.ignore();
                 
                 char confirm;
                 cout << "Are you sure you want to delete this account? (y/n): ";
