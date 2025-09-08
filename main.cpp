@@ -285,8 +285,9 @@ public:
         string name, feedbackType, message;
         
         // Get customer information
-        cout << "Enter your Account Number (or press Enter to skip): ";
+        cout << "Enter your Account Number: ";
         cin >> accNum;
+        cin.ignore();
         
         if (accNum != 0) {
             // Verify if account exists
@@ -295,8 +296,8 @@ public:
                 name = accountNode->account.getCustomerName();
                 cout << "Welcome, " << name << "!" << endl;
             } else {
-                cout << "Account not found, but you can still submit feedback as a guest." << endl;
-                cout << "Enter your Name: ";
+                cout << "Account " << accNum << " not found, but you can still submit feedback as a guest." << endl;
+                cout << "Enter your Name (or press enter to skip as an Anonymous): ";
                 getline(cin, name);
             }
         } else {
@@ -490,12 +491,12 @@ int main() {
                 cin >> accNum;
                 cin.ignore();
                 
-                char confirm;
-                cout << "Are you sure you want to delete this account? (y/n): ";
+                string confirm;
+                cout << "Are you sure you want to delete this account? (yes/no): ";
                 cin >> confirm;
                 cin.ignore();
                 
-                if (confirm == 'y' || confirm == 'Y') {
+                if (confirm == "y" || confirm == "Y" || confirm == "yes" || confirm == "YES" || confirm == "Yes") {
                     bank.deleteAccount(accNum);
                 } else {
                     cout << "Account deletion cancelled." << endl;
