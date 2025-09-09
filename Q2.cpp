@@ -114,6 +114,20 @@ public:
         i = (i+1) % MAX_SIZE;
     }
   }
+
+  void displayAllWithHeader(const string &header){
+        cout << header << endl;
+        if(isEmpty()){
+            cout << "Shipped items is empty\n";
+            return;
+        }
+        int i = front;
+        while (true){
+            cout << "- " << items[i] << endl;
+            if (i == rear) break;
+            i = (i+1) % MAX_SIZE;
+        }
+    }
 };
 
 // Array-based Stack Class handling incoming items
@@ -212,10 +226,7 @@ int main()
 
     do
     {
-        cout << "\n" << string(50, '=') << endl;
-        cout << "     WAREHOUSE INVENTORY & SHIPPING SYSTEM" << endl;
-        cout << string(50, '=') << endl;
-        cout << "1. Add Incoming Item\n";
+        cout << "\n1. Add Incoming Item\n";
         cout << "2. Process Incoming Item\n";
         cout << "3. Ship Item\n";
         cout << "4. View Last Incoming Item\n";
@@ -231,7 +242,7 @@ int main()
           cout << "Invalid input. Please enter a number between 1 and 9." << endl;
           continue;               // restart loop
         }
-        cin.ignore(1000, '\n'); 
+        cin.ignore(1000, '\n');
 
         switch (choice)
         {
@@ -296,10 +307,10 @@ int main()
 
         case 7:
             shippingQueue.displayAll();     // Display all items in shipping queue
-            break; 
+            break;
 
         case 8:
-            shippedItems.displayAll();      // Display all completed shipping
+            shippedItems.displayAllWithHeader("Shipped Items: ");      // Display all completed shipping
             break;
 
         case 9:
