@@ -431,12 +431,14 @@ int main() {
                     cout << string(30, '-') << endl;
                     cout << "Enter Account Number: ";
                     cin >> accNum;
-                    cin.ignore();
+                    cin.clear();
+                    cin.ignore(1000, '\n');
                     cout << "Enter Customer Name: ";
                     getline(cin, cusName);
                     cout << "Enter Initial Balance: $";
                     cin >> amount;
-                    cin.ignore();
+                    cin.clear();
+                    cin.ignore(1000, '\n');
                     
                     if(bank.createAccount(accNum, cusName, amount)) {
                         tryAgain = false;
@@ -452,6 +454,7 @@ int main() {
                         }
                     }
                 }
+                //cin.ignore();
                 break;
             }
                 
@@ -467,14 +470,15 @@ int main() {
                     cout << string(30, '-') << endl;
                     cout << "Enter Account Number: ";
                     cin >> accNum;
-                    cin.ignore();
+                    cin.clear();
+                    cin.ignore(1000, '\n');
                     
                     BankAccountNode* found = bank.searchAccount(accNum);
                     if(found != nullptr) {
                         bank.displayAccountDetails(accNum);
                         tryAgain = false;
                     } else {
-                        cout << "Account " << accNum << " not found!" << endl;
+                        cout << "Error: Account " << accNum << " not found!" << endl;
                         
                         //Ask if user wants to try again
                         string retry;
@@ -488,6 +492,7 @@ int main() {
                         }
                     }
                 }
+                //cin.ignore();
                 break;
             }
                 
@@ -498,10 +503,12 @@ int main() {
                     cout << string(30, '-') << endl;
                     cout << "Enter Account Number: ";
                     cin >> accNum;
-                    cin.ignore();
+                    cin.clear();
+                    cin.ignore(1000, '\n');
                     cout << "Enter Deposit Amount: $";
                     cin >> amount;
-                    cin.ignore();
+                    cin.clear();
+                    cin.ignore(1000, '\n');
                     
                     if(bank.deposit(accNum, amount)) {
                         tryAgain = false;
@@ -518,6 +525,7 @@ int main() {
                         }
                     }
                 }
+                //cin.ignore();
                 break;
             }
                 
@@ -528,10 +536,12 @@ int main() {
                     cout << string(30, '-') << endl;
                     cout << "Enter Account Number: ";
                     cin >> accNum;
-                    cin.ignore();
+                    cin.clear();
+                    cin.ignore(1000, '\n');
                     cout << "Enter Withdrawal Amount: $";
                     cin >> amount;
-                    cin.ignore();
+                    cin.clear();
+                    cin.ignore(1000, '\n');
                     
                     if(bank.withdraw(accNum, amount)) {
                         tryAgain = false;
@@ -548,6 +558,7 @@ int main() {
                         }
                     }
                 }
+                //cin.ignore();
                 break;
             }
                 
@@ -558,7 +569,8 @@ int main() {
                     cout << string(30, '-') << endl;
                     cout << "Enter Account Number to Delete: ";
                     cin >> accNum;
-                    cin.ignore();
+                    cin.clear();
+                    cin.ignore(1000, '\n');
                     
                     if(bank.searchAccount(accNum) == nullptr) {
                         cout << "Error: Account " << accNum << " not found!" << endl;
@@ -589,6 +601,7 @@ int main() {
                         }
                     }
                 }
+                //cin.ignore();
                 break;
             }
                 
