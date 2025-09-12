@@ -425,18 +425,33 @@ int main() {
         
         switch (choice) {
             case 1: { // Create New Account
-                cout << "\nCREATE NEW ACCOUNT" << endl;
-                cout << string(30, '-') << endl;
-                cout << "Enter Account Number: ";
-                cin >> accNum;
-                cin.ignore();
-                cout << "Enter Customer Name: ";
-                getline(cin, cusName);
-                cout << "Enter Initial Balance: $";
-                cin >> amount;
-                cin.ignore();
-                
-                bank.createAccount(accNum, cusName, amount);
+                bool tryAgain = true;
+                while(tryAgain) {
+                    cout << "\nCREATE NEW ACCOUNT" << endl;
+                    cout << string(30, '-') << endl;
+                    cout << "Enter Account Number: ";
+                    cin >> accNum;
+                    cin.ignore();
+                    cout << "Enter Customer Name: ";
+                    getline(cin, cusName);
+                    cout << "Enter Initial Balance: $";
+                    cin >> amount;
+                    cin.ignore();
+                    
+                    if(bank.createAccount(accNum, cusName, amount)) {
+                        tryAgain = false;
+                    } else {
+                        string retry;
+                        cout << "\nDo you want to try again? (y/n): ";
+                        cin >> retry;
+                        cin.ignore();
+                        
+                        if(retry != "yes" && retry != "YES" && retry != "Yes" && retry != "y") {
+                            tryAgain = false;
+                            cout << "Returning to main menu..." << endl;
+                        }
+                    }
+                }
                 break;
             }
                 
@@ -446,60 +461,133 @@ int main() {
             }
                 
             case 3: { // Search Account
-                cout << "\nSEARCH ACCOUNT" << endl;
-                cout << string(30, '-') << endl;
-                cout << "Enter Account Number: ";
-                cin >> accNum;
-                cin.ignore();
-                
-                bank.displayAccountDetails(accNum);
+                bool tryAgain = true;
+                while(tryAgain) {
+                    cout << "\nSEARCH ACCOUNT" << endl;
+                    cout << string(30, '-') << endl;
+                    cout << "Enter Account Number: ";
+                    cin >> accNum;
+                    cin.ignore();
+                    
+                    BankAccountNode* found = bank.searchAccount(accNum);
+                    if(found != nullptr) {
+                        bank.displayAccountDetails(accNum);
+                        tryAgain = false;
+                    } else {
+                        cout << "Account " << accNum << " not found!" << endl;
+                        
+                        //Ask if user wants to try again
+                        string retry;
+                        cout << "\nDo you want to try again? (y/n): ";
+                        cin >> retry;
+                        cin.ignore();
+                        
+                        if(retry != "yes" && retry != "YES" && retry != "Yes" && retry != "y" && retry != "Y") {
+                            tryAgain = false;
+                            cout << "Returning to main menu..." << endl;
+                        }
+                    }
+                }
                 break;
             }
                 
             case 4: { // Deposit Money
-                cout << "\nDEPOSIT MONEY" << endl;
-                cout << string(30, '-') << endl;
-                cout << "Enter Account Number: ";
-                cin >> accNum;
-                cin.ignore();
-                cout << "Enter Deposit Amount: $";
-                cin >> amount;
-                cin.ignore();
-                
-                bank.deposit(accNum, amount);
+                bool tryAgain = true;
+                while(tryAgain) {
+                    cout << "\nDEPOSIT MONEY" << endl;
+                    cout << string(30, '-') << endl;
+                    cout << "Enter Account Number: ";
+                    cin >> accNum;
+                    cin.ignore();
+                    cout << "Enter Deposit Amount: $";
+                    cin >> amount;
+                    cin.ignore();
+                    
+                    if(bank.deposit(accNum, amount)) {
+                        tryAgain = false;
+                    } else {
+                        //Ask if user wants to try again
+                        string retry;
+                        cout << "\nDo you want to try again? (y/n): ";
+                        cin >> retry;
+                        cin.ignore();
+                        
+                        if(retry != "yes" && retry != "YES" && retry != "Yes" && retry != "y" && retry != "Y") {
+                            tryAgain = false;
+                            cout << "Returning to main menu..." << endl;
+                        }
+                    }
+                }
                 break;
             }
                 
             case 5: { // Withdraw Money
-                cout << "\nWITHDRAW MONEY" << endl;
-                cout << string(30, '-') << endl;
-                cout << "Enter Account Number: ";
-                cin >> accNum;
-                cin.ignore();
-                cout << "Enter Withdrawal Amount: $";
-                cin >> amount;
-                cin.ignore();
-                
-                bank.withdraw(accNum, amount);
+                bool tryAgain = true;
+                while(tryAgain) {
+                    cout << "\nWITHDRAW MONEY" << endl;
+                    cout << string(30, '-') << endl;
+                    cout << "Enter Account Number: ";
+                    cin >> accNum;
+                    cin.ignore();
+                    cout << "Enter Withdrawal Amount: $";
+                    cin >> amount;
+                    cin.ignore();
+                    
+                    if(bank.withdraw(accNum, amount)) {
+                        tryAgain = false;
+                    } else {
+                        //Ask if user wants to try again
+                        string retry;
+                        cout << "\nDo you want to try again? (y/n): ";
+                        cin >> retry;
+                        cin.ignore();
+                        
+                        if(retry != "yes" && retry != "YES" && retry != "Yes" && retry != "y" && retry != "Y") {
+                            tryAgain = false;
+                            cout << "Returning to main menu..." << endl;
+                        }
+                    }
+                }
                 break;
             }
                 
             case 6: { // Delete Account
-                cout << "\nDELETE ACCOUNT" << endl;
-                cout << string(30, '-') << endl;
-                cout << "Enter Account Number to Delete: ";
-                cin >> accNum;
-                cin.ignore();
-                
-                string confirm;
-                cout << "Are you sure you want to delete this account? (yes/no): ";
-                cin >> confirm;
-                cin.ignore();
-                
-                if (confirm == "y" || confirm == "Y" || confirm == "yes" || confirm == "YES" || confirm == "Yes") {
-                    bank.deleteAccount(accNum);
-                } else {
-                    cout << "Account deletion cancelled." << endl;
+                bool tryAgain = true;
+                while(tryAgain) {
+                    cout << "\nDELETE ACCOUNT" << endl;
+                    cout << string(30, '-') << endl;
+                    cout << "Enter Account Number to Delete: ";
+                    cin >> accNum;
+                    cin.ignore();
+                    
+                    if(bank.searchAccount(accNum) == nullptr) {
+                        cout << "Error: Account " << accNum << " not found!" << endl;
+                        
+                        //Ask if user wants to try again
+                        string retry;
+                        cout << "\nDo you want to try again? (y/n): ";
+                        cin >> retry;
+                        cin.ignore();
+                        
+                        if(retry != "yes" && retry != "YES" && retry != "Yes" && retry != "y" && retry != "Y") {
+                            tryAgain = false;
+                            cout << "Returning to main menu..." << endl;
+                        }
+                    } else {
+                        //Account exists, ask for confirmation
+                        string confirm;
+                        cout << "Are you sure you want to delete this account? (y/n): ";
+                        cin >> confirm;
+                        cin.ignore();
+                        
+                        if (confirm == "y" || confirm == "Y" || confirm == "yes" || confirm == "YES" || confirm == "Yes") {
+                            bank.deleteAccount(accNum);
+                            tryAgain = false; //Operation completed
+                        } else {
+                            cout << "Account deletion cancelled." << endl;
+                            tryAgain = false; //Operation completed
+                        }
+                    }
                 }
                 break;
             }
